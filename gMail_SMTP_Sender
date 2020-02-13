@@ -8,9 +8,9 @@ import time
 import datetime
 import random
 
-gmail_Address   = "birds.have.good.news@gmail.com"
-gmail_userID    = "birds.have.good.news"
-gmail_pwd       = "anes6597"
+gmail_Address   = "ID@gmail.com"
+gmail_userID    = "MAIL_ID"
+gmail_pwd       = "password"
 
 def send_gMail(to, subject, text, html, attach):
     msg = MIMEMultipart('alternative')
