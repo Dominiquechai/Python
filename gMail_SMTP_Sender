@@ -1,0 +1,73 @@
+#-*- coding: euc-kr -*-
+import os, smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email.mime.text import MIMEText
+from email import encoders
+import time
+import datetime
+import random
+
+gmail_Address   = "birds.have.good.news@gmail.com"
+gmail_userID    = "birds.have.good.news"
+gmail_pwd       = "anes6597"
+
+def send_gMail(to, subject, text, html, attach):
+    msg = MIMEMultipart('alternative')
+    msg['From'] = gmail_Address
+    msg['To'] = to
+    msg['Subject'] = subject
+    msg.attach(MIMEText(html, 'html', _charset="utf-8"))
+    part=MIMEBase('application','octet-stream')
+
+    part.set_payload(open(attach, "rb").read())
+    encoders.encode_base64(part)
+    part.add_header('Content-Disposition','attachment; filename="%s"' % os.path.basename(attach))
+    msg.attach(part)
+
+    mailServer = smtplib.SMTP("smtp.gmail.com", 587)
+    mailServer.login(gmail_userID, gmail_pwd)
+    mailServer.sendmail(gmail_userID, to, msg.as_string())
+    mailServer.close()
+
+def mainLoop():
+    f = open("Message.txt", "r")
+    message = f.read()
+    f.close()
+
+    title = "gMail SMTP Test"
+
+    f = open("list.txt", "r")
+    emails = f.readlines()
+
+    for i, email in enumerate(emails):
+        # attach_file = "babo{0}.txt".format(i)
+        attach_file = "Babo.txt"
+        f = open("Test3.html", "rt", encoding='UTF-8')
+        html1 = f.read()
+        html = html1    
+        
+        #print(html)
+
+        rand = random.randrange(5, 7) # Set range of the waiting time.
+        email = email.strip() # Removing White spaces.
+        if email == "":
+            continue
+
+        print( "[" + str(datetime.datetime.now()) + "] Sending email to " + email + "...")
+        
+        try:
+            send_gMail(email, title, message, html, attach_file)
+        except:
+            print ("Mail sending error. (" + email + ")")
+            break
+
+        print ("[" + str(datetime.datetime.now()) + "] Complete... Waiting for " + str(rand) + " seconds.")
+        time.sleep(rand)
+
+    print ("Sending mail program is going to be terminated. Now waiting your command to exit.")
+    
+    f.close()
+
+if __name__ == "__main__":
+    mainLoop()
