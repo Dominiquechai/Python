@@ -12,7 +12,7 @@
       <td style="vertical-align: top; padding: 5px 0;" valign="top" align="center">
         <table border="0" cellpadding="0" cellspacing="0" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: auto;">
           <tbody>
-            <form action="contact_me.php" method="post">
+            <form id="gfrom" action="https://script.google.com/macros/s/AKfycbzdtzDy51Zl0GxuhdJaKJOEmQr2-yL4Z1QCLCZD/exec" method="POST">
             <tr>
               <td>
                   <label for="name">이름 (별명도 좋아요)</label><br>
