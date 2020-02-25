@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Magnet 만들기</title>
+  </head>
+  <body>
+    Magnet : <input type="text" id="magnet" class="paste-data"><br />
+    <button id="copy">Copy</button>
+    <button id="clear">Clear</button>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+      // Clear 버튼을 누르면 텍스트 박스가 초기화됩니다.
+      $("#clear").on("click", function(){
+        $("#magnet").val('');
+      });
+      
+      // Copy 버튼을 누르면 클립보드로 복사됩니다.
+      $("#copy").on("click", function(){
+        var data = $("#magnet").val();
+        $("#copy").data("copy", true);
+        $("#copy").data("val", data);
+        document.execCommand('copy');
+      });
+
+      // 키보드로 Ctrl + V를 누를 경우 데이터가 들어갑니다.
+      window.addEventListener('paste', function (e){
+        /*if($("#paste").data("paste") === undefined){
+          return;
+        }
+        $("#paste").removeData("paste");*/
+        var data = e.clipboardData.getData('text/plain');
+        data = 'magnet:?xt=urn:btih:' + data;
+        var list = data.split(',');
+        for(var i=0;i < list.length; i++){
+          $($(".paste-data")[i]).val(list[i]);
+        }
+      });
+      $("body").bind('copy', function (e) {
+        if($("#copy").data("copy") === undefined){
+          return;
+        }
+        $("#copy").removeData("copy");
+        var selection = window.getSelection();
+        // body 돔에 div 엘리먼트를 생성하고 그 안에 pre 태그를 사용해서 html 형식으로 밀어 넣는다.
+        // 복사할 임시 엘리먼트는 화면상에 보이면 안되기 때문에 absolute형식으로 좌로 -99999로 넣는다.
+        // 참고: display:none을 하면 복사가 되지 않습니다.
+        var body_element = document.getElementsByTagName('body')[0];
+ 
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        body_element.appendChild(newdiv);
+        // data를 넣는다.
+        var data = $('#copy').data('val');
+        newdiv.innerHTML = data;
+        $("#copy").removeData('val');
+ 
+        // 생성한 div를 셀렉트한다.
+        selection.selectAllChildren(newdiv);
+        
+        // 약간의 딜레이가 필요하기 때문에 setTimeout으로 제어한다.
+        window.setTimeout(function () {
+          body_element.removeChild(newdiv);
+        }, 1);
+      });
+    </script>
+  </body>
+</html>
